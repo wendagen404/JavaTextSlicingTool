@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 /**
  * LangChain4j OpenAI 模型策略。
  */
-@Component
 public class LangChain4jOpenAiModel extends AbstractLangChain4jModel {
     public LangChain4jOpenAiModel(ObjectProvider<ChatModel> chatModelProvider) {
         super(chatModelProvider.getIfAvailable());

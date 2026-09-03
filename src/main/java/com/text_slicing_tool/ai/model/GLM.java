@@ -7,9 +7,8 @@ import org.springframework.stereotype.Component;
 /**
  * 智谱 GLM 模型策略。
  */
-@Component
 public class GLM extends AbstractSpringAiModel {
-    public GLM(ChatClient.Builder chatClientBuilder) {
+    public GLM(ChatClient chatClientBuilder) {
         super(chatClientBuilder);
     }
 

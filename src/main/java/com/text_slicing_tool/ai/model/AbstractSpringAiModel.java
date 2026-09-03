@@ -13,8 +13,8 @@ import java.util.Map;
 public abstract class AbstractSpringAiModel extends AbstractAiModel {
     private final ChatClient chatClient;
 
-    protected AbstractSpringAiModel(ChatClient.Builder chatClientBuilder) {
-        this.chatClient = chatClientBuilder == null ? null : chatClientBuilder.build();
+    protected AbstractSpringAiModel(ChatClient chatClientBuilder) {
+        this.chatClient = chatClientBuilder;
     }
 
     /**

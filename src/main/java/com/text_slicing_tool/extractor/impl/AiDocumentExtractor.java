@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 /**
  * AI 文本提取器。
  */
-@Component
 public class AiDocumentExtractor implements DocumentExtractor {
     private final LLMContext llmContext;
     private final AiFramework aiFramework;

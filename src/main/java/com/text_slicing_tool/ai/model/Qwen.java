@@ -7,9 +7,8 @@ import org.springframework.stereotype.Component;
 /**
  * 通义千问模型策略。
  */
-@Component
 public class Qwen extends AbstractSpringAiModel {
-    public Qwen(ChatClient.Builder chatClientBuilder) {
+    public Qwen(ChatClient chatClientBuilder) {
         super(chatClientBuilder);
     }
 

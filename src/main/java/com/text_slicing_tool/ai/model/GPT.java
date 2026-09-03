@@ -7,9 +7,8 @@ import org.springframework.stereotype.Component;
 /**
  * Spring AI OpenAI GPT 模型策略。
  */
-@Component
 public class GPT extends AbstractSpringAiModel {
-    public GPT(ChatClient.Builder chatClientBuilder) {
+    public GPT(ChatClient chatClientBuilder) {
         super(chatClientBuilder);
     }
 
