@@ -1,16 +1,25 @@
 package com.text_slicing_tool.ai.model;
 
-import com.text_slicing_tool.pojo.ExtractResult;
-import com.text_slicing_tool.pojo.SplitResult;
+import com.text_slicing_tool.enums.AiType;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.stereotype.Component;
 
-public class Qwen extends LlmModel {
-    @Override
-    public SplitResult doSplitter() {
-        return SplitResult.empty("qwen");
+/**
+ * 通义千问模型策略。
+ */
+@Component
+public class Qwen extends AbstractSpringAiModel {
+    public Qwen(ChatClient.Builder chatClientBuilder) {
+        super(chatClientBuilder);
     }
 
+    /**
+     * 返回当前策略支持的模型厂商类型。
+     *
+     * @return 通义千问类型
+     */
     @Override
-    public ExtractResult doExtractor() {
-        return ExtractResult.empty("qwen", "ai");
+    public AiType supportType() {
+        return AiType.QWEN;
     }
 }

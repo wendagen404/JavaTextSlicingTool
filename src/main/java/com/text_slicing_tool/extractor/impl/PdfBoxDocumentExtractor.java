@@ -22,7 +22,7 @@ public class PdfBoxDocumentExtractor implements DocumentExtractor {
     public ExtractResult extract(ClassPathResource resource) {
         PDDocument document = null;
         try {
-            // 使用InputStream加载PDF，兼容IDE和打包后的jar
+            // 使用InputStream加载PDF
             document = Loader.loadPDF(resource.getInputStream().readAllBytes());
             PDFTextStripper stripper = new PDFTextStripper();
 

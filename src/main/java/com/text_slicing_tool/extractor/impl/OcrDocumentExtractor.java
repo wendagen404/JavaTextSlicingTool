@@ -100,7 +100,7 @@ public class OcrDocumentExtractor implements DocumentExtractor {
 
 
     public static void main(String[] args) {
-//        ClassPathResource resource = new ClassPathResource("document/Java集合相关面试题.pdf");
+//        ClassPathResource resource = new ClassPathResource("document/Java.pdf");
         ClassPathResource resource = new ClassPathResource("document/img.png");
         new OcrDocumentExtractor().extract(resource);
     }

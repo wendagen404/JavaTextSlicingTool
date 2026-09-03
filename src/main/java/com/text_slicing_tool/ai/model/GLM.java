@@ -1,16 +1,25 @@
 package com.text_slicing_tool.ai.model;
 
-import com.text_slicing_tool.pojo.ExtractResult;
-import com.text_slicing_tool.pojo.SplitResult;
+import com.text_slicing_tool.enums.AiType;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.stereotype.Component;
 
-public class GLM extends LlmModel{
-    @Override
-    public SplitResult doSplitter() {
-        return SplitResult.empty("glm");
+/**
+ * 智谱 GLM 模型策略。
+ */
+@Component
+public class GLM extends AbstractSpringAiModel {
+    public GLM(ChatClient.Builder chatClientBuilder) {
+        super(chatClientBuilder);
     }
 
+    /**
+     * 返回当前策略支持的模型厂商类型。
+     *
+     * @return GLM 类型
+     */
     @Override
-    public ExtractResult doExtractor() {
-        return ExtractResult.empty("glm", "ai");
+    public AiType supportType() {
+        return AiType.GLM;
     }
 }

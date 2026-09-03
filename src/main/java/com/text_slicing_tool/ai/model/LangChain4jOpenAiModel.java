@@ -1,16 +1,17 @@
 package com.text_slicing_tool.ai.model;
 
 import com.text_slicing_tool.enums.AiType;
-import org.springframework.ai.chat.client.ChatClient;
+import dev.langchain4j.model.chat.ChatModel;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 /**
- * Spring AI OpenAI GPT 模型策略。
+ * LangChain4j OpenAI 模型策略。
  */
 @Component
-public class GPT extends AbstractSpringAiModel {
-    public GPT(ChatClient.Builder chatClientBuilder) {
-        super(chatClientBuilder);
+public class LangChain4jOpenAiModel extends AbstractLangChain4jModel {
+    public LangChain4jOpenAiModel(ObjectProvider<ChatModel> chatModelProvider) {
+        super(chatModelProvider.getIfAvailable());
     }
 
     /**
