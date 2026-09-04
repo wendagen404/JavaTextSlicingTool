@@ -1,6 +1,7 @@
 package com.text_slicing_tool.splitter.impl;
 
 import com.text_slicing_tool.ai.LLMContext;
+import com.text_slicing_tool.ai.model.LlmModel;
 import com.text_slicing_tool.enums.AiFramework;
 import com.text_slicing_tool.enums.AiType;
 import com.text_slicing_tool.pojo.DocumentContent;
@@ -19,10 +20,16 @@ public class AiSplitter implements TextSplitter {
     /**
      * 创建默认 AI 切割器。
      *
+     * <p>从上下文中解析已注册的唯一模型作为默认策略，避免硬编码厂商类型。
+     * 适用于 yml 单模型配置场景。
+     *
      * @param llmContext AI 模型策略上下文
      */
     public AiSplitter(LLMContext llmContext) {
-        this(llmContext, AiFramework.SPRING_AI, AiType.OPENAI);
+        LlmModel defaultModel = llmContext.getDefaultModel();
+        this.llmContext = llmContext;
+        this.aiFramework = defaultModel.supportFramework();
+        this.aiType = defaultModel.supportType();
     }
 
     /**

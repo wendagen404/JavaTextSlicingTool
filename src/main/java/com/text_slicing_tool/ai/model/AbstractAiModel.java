@@ -7,6 +7,7 @@ import com.text_slicing_tool.pojo.ExtractResult;
 import com.text_slicing_tool.pojo.SplitResult;
 import com.text_slicing_tool.pojo.TextChunk;
 import com.text_slicing_tool.splitter.support.ChunkWindowBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.Map;
 /**
  * AI 模型策略公共基类，负责提示词、结果解析和领域返回值组装。
  */
+@Slf4j
 public abstract class AbstractAiModel implements LlmModel {
     /**
      * 调用底层模型并返回统一 AI 文本结果。
@@ -62,38 +64,6 @@ public abstract class AbstractAiModel implements LlmModel {
                 .build();
     }
 
-    /**
-     * 使用当前模型对文档资源进行 AI 文本提取。
-     *
-     * @param resource 待解析资源
-     * @return AI 提取结果
-     */
-    @Override
-    public ExtractResult doExtractor(ClassPathResource resource) {
-        long start = System.currentTimeMillis();
-        try (InputStream inputStream = resource.getInputStream()) {
-            String rawText = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-
-            // AI 适配层只处理文本输入，PDF/图片等二进制内容先由专门提取器转成文本。
-            AiMessageResult aiResult = chat(buildExtractPrompt(rawText));
-            Map<String, Object> metadata = buildMetadata(aiResult);
-            metadata.put("resourcePath", resource.getPath());
-
-            return ExtractResult.builder()
-                    .extractorType(supportType().getVendorCode())
-                    .durationMillis(System.currentTimeMillis() - start)
-                    .metadata(metadata)
-                    .content(DocumentContent.builder()
-                            .sourceId(resource.getPath())
-                            .sourceType("ai")
-                            .text(aiResult.getContent())
-                            .metadata(metadata)
-                            .build())
-                    .build();
-        } catch (IOException e) {
-            throw new RuntimeException("AI 文本提取失败", e);
-        }
-    }
 
     /**
      * 构建适合 RAG 入库的 AI 切割提示词。
@@ -103,35 +73,32 @@ public abstract class AbstractAiModel implements LlmModel {
      */
     protected String buildSplitPrompt(String text) {
         return """
-                请将下面文本切分为适合 RAG 入库的语义片段。
-                要求：
-                1. 每个片段保持语义完整。
-                2. 不要切断 URL、邮箱、版本号、文件路径。
-                3. 每个片段独占一行。
-                4. 不要输出编号、解释或 Markdown 代码块。
+            角色：
+            你是一个RAG文档切分专家，负责对输入文档做语义分片，保障检索语义完整性。
+            任务：
+            请将下面文本按语义关联切分为适合RAG入库的片段。
+            要求：
+            1. 每个片段保证语义完整，避免切分过短，拒绝把孤立标题单独作为分片。
+            2. 禁止切断URL、邮箱、版本号、文件路径。
+            3. 一个片段占一行，片段之间使用单个换行分隔，不要出现两行空行。
+            4. 不要输出编号、额外解释、Markdown代码块，只输出分片结果。
+            5. 标题处理规则：大标题必须跟随其下属正文内容合并为同一个分片；仅当大标题下整体内容篇幅过长时，才允许基于小标题做拆分；禁止将大标题、小标题剥离正文单独拆成独立分片；禁止把同一个大标题下的多个小标题内容拆成互相隔离的零散分片，并且大标题需要和内容在同一分片以“:”进行连接。
 
-                文本：
-                %s
-                """.formatted(text);
-    }
+            【正确示例】
+            ## 环境配置:配置JDK版本为17，修改application.yml配置文件，设置端口为8080，数据库地址jdbc:mysql://127.0.0.1:3306/test。
 
-    /**
-     * 构建适合 RAG 入库的 AI 文本提取提示词。
-     *
-     * @param text 原始内容
-     * @return 提示词
-     */
-    protected String buildExtractPrompt(String text) {
-        return """
-                请从下面内容中提取适合 RAG 入库的纯文本。
-                要求：
-                1. 保留标题、段落、表格语义。
-                2. 清理无意义噪声。
-                3. 不要输出额外解释。
+            【错误反例】
+            ## 环境配置
+            
+            JDK版本为17
+            
+            修改application.yml配置文件
+            
+            设置端口为8080，数据库地址jdbc:mysql://127.0.0.1:3306/test
 
-                内容：
-                %s
-                """.formatted(text);
+            文本：
+            %s
+            """.formatted(text);
     }
 
     /**

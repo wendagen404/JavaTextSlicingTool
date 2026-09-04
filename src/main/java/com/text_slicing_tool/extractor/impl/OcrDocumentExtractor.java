@@ -60,48 +60,4 @@ public class OcrDocumentExtractor implements DocumentExtractor {
         }
     }
 
-//    public ExtractResult extract(ClassPathResource resource) {
-//        try (InputStream is = resource.getInputStream();
-//             PDDocument document = Loader.loadPDF(is.readAllBytes())) {
-//
-//            String embeddedText = new PDFTextStripper().getText(document).trim();
-//            if (embeddedText.length() >= 80) {
-//                return ExtractResult.builder()
-//                        .extractorType("ocr")
-//                        .content(DocumentContent.builder()
-//                                .sourceType("pdf")
-//                                .text(embeddedText)
-//                                .build())
-//                        .build();
-//            }
-//
-//            PDFRenderer renderer = new PDFRenderer(document);
-//            ITesseract tesseract = new Tesseract();
-//            tesseract.setDatapath(LoadLibs.extractTessResources("tessdata").getAbsolutePath());
-//            tesseract.setLanguage("chi_sim+eng");
-//
-//            StringBuilder sb = new StringBuilder();
-//            for (int page = 0; page < document.getNumberOfPages(); page++) {
-//                BufferedImage image = renderer.renderImageWithDPI(page, 300);
-//                String pageText = tesseract.doOCR(image);
-//                sb.append(pageText).append('\n');
-//            }
-//            return ExtractResult.builder()
-//                    .extractorType("ocr")
-//                    .content(DocumentContent.builder()
-//                            .sourceType("pdf")
-//                            .text(sb.toString().trim())
-//                            .build())
-//                    .build();
-//        } catch (Exception e) {
-//            throw new RuntimeException("OCR识别失败", e);
-//        }
-//    }
-
-
-    public static void main(String[] args) {
-//        ClassPathResource resource = new ClassPathResource("document/Java.pdf");
-        ClassPathResource resource = new ClassPathResource("document/img.png");
-        new OcrDocumentExtractor().extract(resource);
-    }
 }

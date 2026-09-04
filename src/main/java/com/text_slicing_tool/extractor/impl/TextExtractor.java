@@ -48,7 +48,4 @@ public class TextExtractor implements DocumentExtractor {
         }
     }
 
-    public static void main(String[] args) {
-        new TextExtractor().extract(new ClassPathResource("document/test.txt"));
-    }
 }

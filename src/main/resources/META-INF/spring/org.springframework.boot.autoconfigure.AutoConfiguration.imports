@@ -1,0 +1,3 @@
+com.text_slicing_tool.ai.config.AiAutoConfiguration
+com.text_slicing_tool.ai.config.SpringAiAutoConfiguration
+com.text_slicing_tool.ai.config.LangChain4jAutoConfiguration

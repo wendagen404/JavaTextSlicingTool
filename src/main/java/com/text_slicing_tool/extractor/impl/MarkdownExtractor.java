@@ -218,8 +218,4 @@ public class MarkdownExtractor implements DocumentExtractor {
             text.append(htmlInline.getLiteral());
         }
     }
-
-    public static void main(String[] args) {
-        new MarkdownExtractor().extract(new ClassPathResource("document/java.md"));
-    }
 }
