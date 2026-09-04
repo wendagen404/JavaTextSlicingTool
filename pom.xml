@@ -8,23 +8,31 @@
         <version>4.1.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.wdg</groupId>
+    <groupId>io.github.wdg</groupId>
     <artifactId>text-slicing-tool</artifactId>
     <version>1.0.0</version>
     <name>text-slicing-tool</name>
-    <description>Java文档提取切割工具</description>
-    <url/>
+    <description>Java 文档提取与切片工具库，面向中文 RAG 场景，支持 Spring AI / LangChain4j 双框架。</description>
+    <url>https://github.com/wendagen404/JavaTextSlicingTool</url>
     <licenses>
-        <license/>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
     </licenses>
     <developers>
-        <developer/>
+        <developer>
+            <id>wdg</id>
+            <name>wdg</name>
+            <url>https://github.com/wendagen404</url>
+        </developer>
     </developers>
     <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
+        <connection>scm:git:https://github.com/wendagen404/JavaTextSlicingTool.git</connection>
+        <developerConnection>scm:git:git@github.com:wendagen404/JavaTextSlicingTool.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/wendagen404/JavaTextSlicingTool</url>
     </scm>
     <properties>
         <java.version>21</java.version>
@@ -35,6 +43,8 @@
         <pdfbox.version>3.0.8</pdfbox.version>
         <tess4j.version>5.20.0</tess4j.version>
         <mark.version>0.21.0</mark.version>
+        <!-- GitHub Packages 发布坐标，distributionManagement / scm 引用 -->
+        <github.repository>wendagen404/JavaTextSlicingTool</github.repository>
     </properties>
 
     <dependencyManagement>
@@ -79,24 +89,28 @@
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
             <version>${pdfbox.version}</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>net.sourceforge.tess4j</groupId>
             <artifactId>tess4j</artifactId>
             <version>${tess4j.version}</version>
+            <optional>true</optional>
         </dependency>
         <!-- commonmark 解析markdown -->
         <dependency>
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
             <version>${mark.version}</version>
+            <optional>true</optional>
         </dependency>
         <!-- commonmark 解析markdown tables -->
         <dependency>
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark-ext-gfm-tables</artifactId>
             <version>${mark.version}</version>
+            <optional>true</optional>
         </dependency>
         <!-- Spring AI 核心聊天客户端，不引入具体模型 starter 自动配置 -->
         <!-- 作为 starter 提供，标记 optional，由使用方按需引入对应框架依赖 -->
@@ -154,7 +168,49 @@
                     <classifier>exec</classifier>
                 </configuration>
             </plugin>
+            <!-- 打包源码 jar，便于使用方在 IDE 关联源码 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 打包 javadoc jar；Lombok 生成的方法在生成 javadoc 时偶有警告，关闭失败快速失败 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <failOnError>false</failOnError>
+                    <doclint>none</doclint>
+                    <charset>UTF-8</charset>
+                    <encoding>UTF-8</encoding>
+                    <docencoding>UTF-8</docencoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+    <!-- 发布到 GitHub Packages；认证信息放在 ~/.m2/settings.xml 的 <server> 中 -->
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/${github.repository}</url>
+        </repository>
+    </distributionManagement>
 
 </project>
