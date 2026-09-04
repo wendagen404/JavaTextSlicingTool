@@ -1,3 +1,22 @@
 spring:
   application:
     name: text_slicing_tool
+
+# AI 模块配置：在其他项目作为 starter 引入时，只需在这里选择框架/厂商并填写密钥即可
+text-slicing:
+  ai:
+    # 调用框架：spring-ai | langchain4j
+    framework: langchain4j
+    # 厂商类型（策略路由与元数据标记）：openai | qwen | glm | deepseek ...
+    type: qwen
+    # OpenAI 兼容端点。不同厂商使用各自的兼容地址：
+    #   OpenAI    : https://api.openai.com
+    #   通义千问   : https://dashscope.aliyuncs.com/compatible-mode/v1
+    #   智谱 GLM  : https://open.bigmodel.cn/api/paas/v4
+    #   DeepSeek  : https://api.deepseek.com
+    base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api-key: ${QWEN_API_KEY}
+    # 模型名称，例如 gpt-4o-mini / qwen-plus / glm-4 / deepseek-chat
+    model: qwen-plus
+    temperature: 0.4
+    max-tokens: 2048

@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.wdg</groupId>
-    <artifactId>text_slicing_tool</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>text_slicing_tool</name>
-    <description>text_slicing_tool</description>
+    <artifactId>text-slicing-tool</artifactId>
+    <version>1.0.0</version>
+    <name>text-slicing-tool</name>
+    <description>Java文档提取切割工具</description>
     <url/>
     <licenses>
         <license/>
@@ -99,14 +99,23 @@
             <version>${mark.version}</version>
         </dependency>
         <!-- Spring AI 核心聊天客户端，不引入具体模型 starter 自动配置 -->
+        <!-- 作为 starter 提供，标记 optional，由使用方按需引入对应框架依赖 -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-client-chat</artifactId>
+            <optional>true</optional>
         </dependency>
         <!-- Spring AI 模型抽象层，保留 ChatModel、EmbeddingModel 等核心接口 -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-model</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- Spring AI OpenAI 模型实现，提供 OpenAiChatModel / OpenAiChatOptions 手动构建能力 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-openai</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -117,17 +126,20 @@
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!-- LangChain4j 核心数据结构，包含 Document、Metadata、TextSegment 等类 -->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-core</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-open-ai</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
@@ -136,6 +148,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- 作为 starter 被其他项目引用时，主产物保留为普通 jar；
+                         可执行 jar 使用 exec 分类器，便于 java -jar 独立运行 -->
+                    <classifier>exec</classifier>
+                </configuration>
             </plugin>
         </plugins>
     </build>

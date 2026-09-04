@@ -32,12 +32,4 @@ public interface LlmModel {
      * @return AI 切割结果
      */
     SplitResult doSplitter(DocumentContent documentContent);
-
-    /**
-     * 使用 AI 对文档资源进行文本提取。
-     *
-     * @param resource 待解析资源
-     * @return AI 提取结果
-     */
-    ExtractResult doExtractor(ClassPathResource resource);
 }

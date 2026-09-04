@@ -1,4 +1,4 @@
-package com.text_slicing_tool;
+package com.wdg.text_slicing_tool;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
